@@ -72,6 +72,8 @@ This approach uses a predefined VM template with cloud-init support to be cloned
 and used. There a lot of ways to do that, here is an adopted one
 (courtesy of [@travisghansen](https://github.com/lnxbil/docker-machine-driver-proxmox-ve/pull/34#issuecomment-665277775)):
 
+needed to create /mnt/tmp
+
 ```sh
 #!/bin/bash
 
@@ -182,12 +184,12 @@ set -ex
 
 export PATH=$PWD:$PATH
 
-PVE_NODE="proxmox"
-PVE_HOST="192.168.1.5"
+PVE_NODE="avh"
+PVE_HOST="10.71.0.250"
 
 PVE_USER="docker-machine"
 PVE_REALM="pve"
-PVE_PASSWD="D0ck3rS3cr3t"
+PVE_PASSWD=<<<<<FIX IN LOCAL .sh>>>>>>
 
 PVE_STORAGE_NAME="${1:-docker-machine}"
 PVE_POOL="docker-machine"
@@ -208,8 +210,8 @@ docker-machine --debug \
     \
     --proxmoxve-provision-strategy clone \
     --proxmoxve-ssh-username 'debian' \
-    --proxmoxve-ssh-password 'geheim' \
-    --proxmoxve-vm-clone-vmid 9007 \
+    --proxmoxve-ssh-password <<<CHANGE IN LOCAL SHELL>>> \
+    --proxmoxve-vm-clone-vmid 9595 \
     \
     --proxmoxve-debug-resty \
     --proxmoxve-debug-driver \
@@ -232,22 +234,22 @@ docker ps
 
 ```sh
 PVE_NODE="proxmox-docker-machine"
-PVE_HOST="192.168.1.10"
+PVE_HOST="10.71.0.250"
 
 PVE_USER="docker-machine"
 PVE_REALM="pve"
-PVE_PASSWD="D0ck3rS3cr3t"
+PVE_PASSWD=  <<<CHANGE IN LOCAL SH>>>>
 
 PVE_STORAGE_NAME="docker-machine"
 PVE_STORAGE_SIZE="4"
 PVE_POOL="docker-machine"
 
 SSH_USERNAME="docker"
-SSH_PASSWORD="tcuser"
+SSH_PASSWORD=  <<<CHANGE IN LOCAL SHELL>>
 
 PVE_MEMORY=2
 PVE_CPU_CORES=4
-PVE_IMAGE_FILE="docker-machine-iso:iso/rancheros-proxmoxve-autoformat-v1.5.5.iso"
+PVE_IMAGE_FILE="docker-machine-iso:iso/rancheros-proxmoxve-autoformat-v1.5.8.iso"
 VM_NAME="docker-rancher"
 
 docker-machine rm --force $VM_NAME >/dev/null 2>&1 || true
