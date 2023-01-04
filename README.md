@@ -3,6 +3,16 @@
 This driver can be used to kickstart a VM in Proxmox VE to be used with Docker/Docker Machine.
 
 * [Download](https://github.com/lnxbil/docker-machine-driver-proxmox-ve/releases/tag/v4) and copy it into your `PATH` (don't forget to `chmod +x`) or build your own driver
+## download docker-machine via:
+
+
+        curl -L https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-`uname -s`-`uname -m` > docker-machine
+        wget https://github.com/lnxbil/docker-machine-driver-proxmox-ve/releases/download/v4/docker-machine-driver-proxmoxve.linux-amd64
+        mv docker-machine-driver-proxmoxve.linux-amd64 docker-machine-driver-proxmoxve
+        chmod +x docker*
+        mv docker* /usr/lib/bin
+
+
 * Check if it works:
 
         $ docker-machine create --driver proxmoxve --help | grep -c proxmox
@@ -33,12 +43,12 @@ Here is what I use (based on ZFS):
 
         pvesh create /access/users -userid docker-machine@pve -password D0ck3rS3cr3t
 
-* creating a special ZFS dataset and use it as PVE storage
+* creating a special ZFS dataset and use it as PVE storage ## changed rpool to local-zfs to reflect avh
 
-        zfs create -o refquota=50G rpool/docker-machine-test
-        zfs create rpool/docker-machine-test/iso
-        pvesh create /storage -storage docker-machine -type zfspool -pool rpool/docker-machine-test
-        pvesh create /storage -storage docker-machine-iso -type dir -path /rpool/docker-machine-test/iso -content iso
+        zfs create -o refquota=50G local-zfs/docker-machine-test
+        zfs create local-zfs/docker-machine-test/iso
+        pvesh create /storage -storage docker-machine -type zfspool -pool local-zfs/docker-machine-test
+        pvesh create /storage -storage docker-machine-iso -type dir -path /local-zfs/docker-machine-test/iso -content iso
         pvesh set /pools/docker-machine -storage docker-machine
         pvesh set /pools/docker-machine -storage docker-machine-iso
 
