@@ -78,7 +78,7 @@ and used. There a lot of ways to do that, here is an adopted one
 set -x
 set -e
 
-export IMGID=9007
+export IMGID=9595
 export BASE_IMG="debian-10-openstack-amd64.qcow2"
 export IMG="debian-10-openstack-amd64-${IMGID}.qcow2"
 export STORAGEID="docker-machine"
@@ -102,7 +102,7 @@ cp -a --force /etc/resolv.conf /mnt/tmp/etc/resolv.conf
 
 # install desired apps
 chroot /mnt/tmp /bin/bash -c "apt-get update"
-chroot /mnt/tmp /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y net-tools curl qemu-guest-agent nfs-common open-iscsi lsscsi sg3-utils multipath-tools scsitools"
+chroot /mnt/tmp /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y net-tools curl qemu-guest-agent nfs-common open-iscsi lsscsi sg3-utils multipath-tools scsitools qemu-guest-agent nano"
 
 # https://www.electrictoolbox.com/sshd-hostname-lookups/
 sed -i 's:#UseDNS no:UseDNS no:' /mnt/tmp/etc/ssh/sshd_config
@@ -151,7 +151,7 @@ umount /mnt/tmp/proc
 umount /mnt/tmp
 
 # create template
-qm create ${IMGID} --memory 512 --net0 virtio,bridge=vmbr0
+qm create ${IMGID} --memory 512 --net0 virtio,bridge=vmbr1
 qm importdisk ${IMGID} ${IMG} ${STORAGEID} --format qcow2
 qm set ${IMGID} --scsihw virtio-scsi-pci --scsi0 ${STORAGEID}:vm-${IMGID}-disk-0
 qm set ${IMGID} --ide2 ${STORAGEID}:cloudinit
